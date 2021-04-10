@@ -46,6 +46,40 @@
 
 * Java中所有方法都能被继承，包括私有方法(但不可见)和静态方法
 
+``` java
+/*
+*静态方法可以被子类继承
+*通过类名可以调用静态方法
+*通过对象名调用静态方法（不建议使用此方法）
+*/
+
+/**
+ * Class Animal is a superclass
+ */
+class Animal{
+	public static void eat(){
+		System.out.println("你猜我喜欢吃什么?");
+	}
+}
+
+/**
+ * Class Dog is the subclass of Animal
+ */
+
+public class Dog extends Animal{
+	public static void main(String[] args){
+		//Dog类继承的父类的eat静态方法
+		//通过类名调用静态方法
+		Dog.eat();	//你猜我喜欢吃什么?
+
+
+		//通过对象调用静态方法（不建议用对象调用静态方法）
+		Dog d = new Dog();
+		d.eat();	//你猜我喜欢吃什么?
+	}
+}
+```
+
 ### 13.静态方法可以被重载吗？
 
 ### 14.静态方法可以被重写吗？（从方法调用过程理解）
@@ -54,71 +88,17 @@
 
 子类包含与父类同名方法的现象被称为方法重写（Override），也被称为方法覆盖。可以说子类重写了父类的方法，也可以说子类覆盖了父类的方法。
 
-覆盖方法和被覆盖方法要么都是类方法，要么都是实例方法，不能一个是类方法，一个是实例方法。
+> 覆盖方法和被覆盖方法要么都是类方法，要么都是实例方法，不能一个是类方法，一个是实例方法。
 
-首先明确一点，在子类中重写父类的static方法，是不会报错的，编译也可以通过，但是在通过一个声明为父类，实际类型为子类的引用变量调用该方法时，发现被调用的仍是父类中原本以为会被覆盖的方法，不具有“多态”特性。描述有点绕，看下面的例子：
+重写方法的目的是为了多态，或者说：重写是实现多态的前提，即重写是发生在继承中且是针对非static方法的。
 
-``` java
-/*
-* @Author: Rongxin
-* @Date:   2021-04-10 11:14:42
-* @Last Modified by:   Rongxin
-* @Last Modified time: 2021-04-10 12:46:26
-* 
-* 测试父类静态方是否会被继承
-* 测试静态方法能否被重载
-* 测试父类静态方法能够否被子类重写
-* 测试静态方法是否可以实现多态
-*/
+首先明确一点，在子类中重写父类的static方法，是不会报错的，编译也可以通过，但是在通过一个声明为父类，实际类型为子类的引用变量调用该方法时，发现被调用的仍是父类中原本以为会被覆盖的方法，不具有“多态”特性。
 
-/**
- * 父类 animal
- */
+语法上子类允许出现和父类只有方法体不一样其他都一模一样的static方法，但是在父类引用指向子类对象时，通过父类引用调用的依然是父类的static方法，而不是子类的static方法。
 
-class Animal{
-	public static void eat(){
-		System.out.println("你猜猜我喜欢吃啥?");
-	}
 
-	//重载静态eat方法
-	public static void eat(String food_name){
-		System.out.println(food_name);
-	}
-}
 
-/**
- * 子类 Dog
- */
 
-public class Dog extends Animal{
-	//可以重写父类的静态方法
-	// 重写父类的静态方法时，static关键字不能省略
-	public static void eat(){
-		System.out.println("我喜欢吃骨头");
-	}
-
-	public static void main(String[] args){
-		Dog d = new Dog();
-
-		//静态方法可以被继承
-		d.eat("狗粮");	//狗粮
-		
-		// 对象名调用静态方法
-		d.eat();	//我喜欢吃骨头
-
-		//类名调用静态方法
-		Dog.eat();	//我喜欢吃骨头
-		Animal.eat();	//你猜猜我喜欢吃啥？
-	
-
-		//父类引用指向子类对象
-		Animal a = new Dog();
-		
-		//不会表现出多态
-		a.eat();//你猜猜我喜欢吃啥？
-	}
-}
-```
 
 测试结果发现，ADHero h=new ADHero();h.battleWin();仍旧调用的是父类的battleWin方法，没有实现所谓的“多态”。
 
